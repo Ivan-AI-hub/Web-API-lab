@@ -92,7 +92,7 @@ namespace Whosales.Web.Services
 
 		private async Task SetPageCount(Func<Product, bool>? whereRule = null)
 		{
-			PageSystemModel.PageCount = (await Mediator.Send(new GetProductsCount(whereRule)) / PageSystemModel.PageSize + 1);
+			PageSystemModel.PageCount = 100;
 		}
 	}
 }

@@ -9,11 +9,13 @@ namespace Whosales.Persistence
 	{
 		public WholesaleContext()
 		{
+			Database.EnsureCreated();
 		}
 
 		public WholesaleContext(DbContextOptions<WholesaleContext> options)
 			: base(options)
 		{
+			Database.EnsureCreated();
 		}
 
 		public virtual DbSet<Customer> Customers { get; set; } = null!;
@@ -34,7 +36,6 @@ namespace Whosales.Persistence
 			if (!optionsBuilder.IsConfigured)
 			{
 				optionsBuilder
-					.UseLazyLoadingProxies()
 					.UseSqlServer(DataBaseConnection.Instance.GetConnection());
 			}
 		}

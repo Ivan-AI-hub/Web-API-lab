@@ -3,6 +3,7 @@ using Whosales.Web.Services;
 
 namespace Whosales.Web.Controllers
 {
+	[Route("api/")]
 	public abstract class BaseController<TService, TEntity> : Controller
 		where TService : BaseTableService<TEntity>
 		where TEntity : class

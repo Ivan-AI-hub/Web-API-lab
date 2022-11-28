@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using Whosales.Application.Interfaces;
 using Whosales.Persistence;
 using Whosales.Web.Middleware;
@@ -22,27 +23,17 @@ namespace Whosales.Web
 		{
 			services.AddTransient<IWholesaleContext, WholesaleContext>();
 
-			services.AddDbContext<ApplicationContext>(options =>
-				options.UseSqlServer(Configuration.GetConnectionString("UserConnection")));
-
-			services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-				.AddDefaultTokenProviders()
-				.AddDefaultUI()
-				.AddEntityFrameworkStores<ApplicationContext>();
-
 			services.AddTransient<CustomerService>();
-			services.AddTransient<EmployerService>();
-			services.AddTransient<ManufacturerService>();
-			services.AddTransient<ProductTypeService>();
-			services.AddTransient<ProvaiderService>();
-			services.AddTransient<StorageService>();
 			services.AddTransient<ProductService>();
-			services.AddTransient<ReceiptReportService>();
 			services.AddTransient<ReleaseReportService>();
 
 			services.AddMediatR(typeof(IWholesaleContext).Assembly);
+			services.AddMemoryCache();
 
-			services.AddControllersWithViews();
+			services.AddControllers().AddJsonOptions(x =>
+				x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+			services.AddEndpointsApiExplorer();
+			services.AddSwaggerGen();
 		}
 
 		public void Configure(IHostEnvironment environment, IApplicationBuilder app)
@@ -50,21 +41,17 @@ namespace Whosales.Web
 			if (environment.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+				app.UseSwagger();
+				app.UseSwaggerUI();
 
 			}
 			app.UseHttpsRedirection();
-			app.UseStaticFiles();
-
-			app.UseMiddleware<UserInitializer>();
 
 			app.UseRouting();
-			app.UseAuthentication();
-			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
-				endpoints.MapRazorPages();
 			});
 		}
 	}
