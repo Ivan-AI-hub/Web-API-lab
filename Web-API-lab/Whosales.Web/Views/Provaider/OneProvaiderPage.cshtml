@@ -1,0 +1,59 @@
+﻿@using Whosales.Domain
+@model Provaider
+@{
+	Layout = "ProvaiderLayout";
+}
+
+@if (Model != null)
+{
+	<h4>Информация о поставщике @Model.Name
+		@if (this.User.IsInRole("admin"))
+		{
+			@Html.ActionLink("Обновить информацию", "Update", "Provaider", new {id = @Model.ProvaiderId}, new {@class="btn btn-sm btn-primary"})
+		}
+	</h4>
+	<div>Название : @Model.Name</div>
+	<div>Адрес : @Model.Address</div>
+	<div>Номер телефона : @Model.TelephoneNumber</div>
+	<p>Количество заказов : @Model.ReceiptReports.Count</p>
+
+	@if (this.User.IsInRole("admin"))
+	{
+		@Html.ActionLink("Добавить поставку", "Add", "ReceiptReport", new{selectedProvaiderId = Model.ProvaiderId}, new {@class="btn btn-sm btn-primary"})
+	}
+	<table class="table">
+		<tr>
+			<td>Дата поставки</td>
+			<td>Имя сотрудника</td>
+			<td>Название товара</td>
+			<td>Количество</td>
+			<td>Стоимость</td>
+			<td></td>
+			<td></td>
+		</tr>
+		@foreach (var ReceiptReport in Model.ReceiptReports)
+		{
+			<tr>
+				<td>@ReceiptReport.ReciveDate.ToShortDateString()</td>
+				<td>@ReceiptReport.Employer.Name</td>
+				<td>@ReceiptReport.Product.Name</td>
+				<td>@ReceiptReport.Volume</td>
+				<td>@ReceiptReport.Cost</td>
+				<td>@Html.ActionLink("Ссылка на объект", "GetById", "ReceiptReport", new {id = @ReceiptReport.ReceiptReportId}, new {@class="btn btn-sm btn-primary"})</td>
+				@if (this.User.IsInRole("admin"))
+				{
+					<td>
+						@Html.ActionLink("Обновить", "Update", "ReceiptReport", new {id = @ReceiptReport.ReceiptReportId}, new {@class="btn btn-sm btn-primary"})
+					</td>
+					<td>
+						@Html.ActionLink("Удалить", "Delete", "ReceiptReport", new {id = @ReceiptReport.ReceiptReportId}, new {@class="btn btn-sm btn-danger"})
+					</td>
+				}
+			</tr>
+		}
+	</table>
+}
+else
+{
+	<h2>Заказчика с данным id не обнаружено</h2>
+}

@@ -1,0 +1,31 @@
+﻿@using Whosales.Domain
+@model ReleaseReport
+@{
+    Layout = "ReleaseReportLayout";
+}
+
+@if (Model != null)
+{
+	<h4>Информация о о поставке @Model.Product.Name @Model.ReciveDate
+		@if (this.User.IsInRole("admin"))
+		{
+			@Html.ActionLink("Обновить информацию", "Update", "ReleaseReport", new {id = @Model.ReleaseReportId}, new {@class="btn btn-sm btn-primary"})
+		}
+	</h4>
+
+	<div>Дата получения : @Html.DisplayFor(x => x.ReciveDate)</div>
+	<div>Дата заказа : @Html.DisplayFor(x => x.OrderDate)</div>
+	<div>Дата отправки : @Html.DisplayFor(x => x.ReleaseDate)</div>
+	<div>Сотрудник : @Html.DisplayFor(x => x.Employer.Name)</div>
+	<div>Заказчик : @Html.DisplayFor(x => x.Customer.Name)</div>
+	<div>Товар : @Html.DisplayFor(x => x.Product.Name)</div>
+	<div>Склад : @Html.DisplayFor(x => x.Storage.Name)</div>
+	<div>Объем : @Html.DisplayFor(x => x.Volume)</div>
+	<div>Стоимость : @Html.DisplayFor(x => x.Cost)</div>
+}
+else
+{
+	<h2>Отчет не найден</h2>
+}
+
+

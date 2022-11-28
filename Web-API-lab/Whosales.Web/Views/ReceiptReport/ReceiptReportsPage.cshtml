@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Html
+@using Whosales.Domain
+@using Whosales.Web.HtmlHelpers
+@using Whosales.Web.Models.ReceiptReports;
+
+@model ReceiptReportsPageViewModel
+@{
+	Layout = "ReceiptReportLayout";
+}
+
+@Html.CreatePageNav("ReceiptReport", @Model.PageCount, @Model.CurrentPage)
+<div align="center">
+	<form>
+		<span>
+			<label>Товар</label>
+			@Html.EnumerableDropDown(Model.Products, x => x.ProductId, x => x.Name, true, Model.ProductId, "productId")
+		</span>
+		<span>
+			<label>Склад</label>
+			@Html.EnumerableDropDown(Model.Storages, x => x.StorageId, x => x.Name,true, Model.StorageId, "storageId")
+		</span>
+		<span>
+			<input type="submit" value="🔍" />
+		</span>
+	</form>
+</div>
+<!--Вывод таблицы-->
+<table class="table">
+	<tr>
+		<th>@Html.ActionLink("Дата отправки", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "DepartureDate"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Сотрудник", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "EmployerName"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Постащик", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "ProvaiderName"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Товар", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "ProductName"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Склад", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "StorageName"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Объем", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "Volume"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Стоимость", "GetAll", "ReceiptReport", new{currentPage = @Model.CurrentPage, sortRule = "Cost"}, new {@class="btn"})</th>
+		<th></th>
+		<th></th>
+	</tr>
+	@foreach (var ReceiptReport in Model.ReceiptReports)
+	{
+		<tr>
+			<td>@ReceiptReport.DepartureDate.ToShortDateString()</td>
+			<td>@ReceiptReport.Employer.Name</td>
+			<td>@ReceiptReport.Provaider.Name</td>
+			<td>@ReceiptReport.Product.Name</td>
+			<td>@ReceiptReport.Storage.Name</td>
+			<td>@ReceiptReport.Volume</td>
+			<td>@ReceiptReport.Cost</td>
+			<td>@Html.ActionLink("Подробнее", "GetById", "ReceiptReport", new {id = @ReceiptReport.ReceiptReportId}, new {@class="btn btn-sm btn-primary"})</td>
+			@if (this.User.IsInRole("admin"))
+			{
+				<td>
+					@Html.ActionLink("Обновить", "Update", "ReceiptReport", new {id = @ReceiptReport.ReceiptReportId}, new {@class="btn btn-sm btn-primary"})
+					@Html.ActionLink("Удалить", "Delete", "ReceiptReport", new {id = @ReceiptReport.ReceiptReportId}, new {@class="btn btn-sm btn-danger"})
+				</td>
+			}
+		</tr>
+	}
+</table>
+
+<!--Разделение по страницам-->
+@Html.CreatePageNav("ReceiptReport", @Model.PageCount, @Model.CurrentPage)

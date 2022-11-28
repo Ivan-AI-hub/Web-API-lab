@@ -1,0 +1,61 @@
+﻿@{
+	Layout = "ReleaseReportLayout";
+}
+@using Whosales.Web.HtmlHelpers
+@using Whosales.Web.Models;
+@using Whosales.Web.Models.ReleaseReports;
+@model ReleaseReportAddPageViewModel
+
+<div class="col-md-6 align-self-center container">
+	<div class="align-self-center">
+		<form method="post">
+
+			<!--Даты-->
+			<div class="form-group">
+				<label class="col-form-label">Дата получения</label>
+				<input type="datetime-local" name="ReciveDate" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Дата заказа</label>
+				<input type="datetime-local" name="OrderDate" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Дата реализации</label>
+				<input type="datetime-local" name="ReleaseDate" class="form-control" />
+			</div>
+
+			<!--Выпадающие списки-->
+			<div class="form-group">
+				<label class="col-form-label">Сотрудник</label>
+				@Html.EnumerableDropDown(Model.Employers, x => x.EmployerId, x => x.Name,false, Model.selectedEmployerId, "employerId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Заказчик</label>
+				@Html.EnumerableDropDown(Model.Customers, x => x.CustomerId, x => x.Name,false, Model.selectedCustomerId, "customerId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Товар</label>
+				@Html.EnumerableDropDown(Model.Products, x => x.ProductId, x => x.Name,false, Model.selectedProductId, "productId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Склад</label>
+				@Html.EnumerableDropDown(Model.Storages, x => x.StorageId, x => x.Name,false, Model.selectedStorageId, "storageId")
+			</div>
+
+			<!--Объём-->
+			<div class="form-group">
+				<label class="col-form-label">Объём</label>
+				<input type="number" name="Volume" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Стоимость</label>
+				<input type="number" name="Cost" step="any" class="form-control" />
+			</div>
+
+			<!--Кнопка-->
+			<div class="form-group">
+				<input type="submit" class="form-control" style="margin-top:20px" />
+			</div>
+		</form>
+	</div>
+</div>

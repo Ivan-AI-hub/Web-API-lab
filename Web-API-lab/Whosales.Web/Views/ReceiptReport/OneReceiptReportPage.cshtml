@@ -1,0 +1,30 @@
+﻿@using Whosales.Domain
+@model ReceiptReport
+@{
+	Layout = "ReceiptReportLayout";
+}
+@if (Model != null)
+{
+	<h4>Информация о о поставке @Model.Product.Name @Model.ReciveDate
+		@if (this.User.IsInRole("admin"))
+		{
+			@Html.ActionLink("Обновить информацию", "Update", "ReceiptReport", new {id = @Model.ReceiptReportId}, new {@class="btn btn-sm btn-primary"})
+		}
+	</h4>
+
+	<div>Дата получения : @Html.DisplayFor(x => x.ReciveDate)</div>
+	<div>Дата заказа : @Html.DisplayFor(x => x.OrderDate)</div>
+	<div>Дата отправки : @Html.DisplayFor(x => x.DepartureDate)</div>
+	<div>Сотрудник : @Html.DisplayFor(x => x.Employer.Name)</div>
+	<div>Постащик : @Html.DisplayFor(x => x.Provaider.Name)</div>
+	<div>Товар : @Html.DisplayFor(x => x.Product.Name)</div>
+	<div>Склад : @Html.DisplayFor(x => x.Storage.Name)</div>
+	<div>Объем : @Html.DisplayFor(x => x.Volume)</div>
+	<div>Стоимость : @Html.DisplayFor(x => x.Cost)</div>
+}
+else
+{
+	<h2>Отчет не найден</h2>
+}
+
+

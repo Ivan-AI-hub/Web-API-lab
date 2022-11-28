@@ -1,0 +1,61 @@
+﻿@using Whosales.Domain
+@using Whosales.Web.Extentions;
+@using Whosales.Web.HtmlHelpers;
+@using Whosales.Web.Models;
+@using Whosales.Web.Models.ReleaseReports;
+@{
+	Layout = "ReleaseReportLayout";
+}
+@model ReleaseReportUpdatePageViewModel
+
+<div class="col-md-6 align-self-center container">
+	<div class="align-self-center">
+		<form method="post">
+			<!--Даты-->
+			<div class="form-group">
+				<label class="col-form-label">Дата получения</label>
+				<input value="@Model.ReleaseReport.ReciveDate.ToDatePickerView()" type="datetime-local" name="ReciveDate" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Дата заказа</label>
+				<input value="@Model.ReleaseReport.OrderDate.ToDatePickerView()" type="datetime-local" name="OrderDate" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Дата реализации</label>
+				<input value="@Model.ReleaseReport.ReleaseDate.ToDatePickerView()" type="datetime-local" name="ReleaseDate" class="form-control" />
+			</div>
+
+			<!--Выпадающие списки-->
+			<div class="form-group">
+				<label class="col-form-label">Сотрудник</label>
+				@Html.EnumerableDropDown(Model.Employers, x => x.EmployerId, x => x.Name,false, Model.ReleaseReport.EmployerId, "employerId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Заказчик</label>
+				@Html.EnumerableDropDown(Model.Customers, x => x.CustomerId, x => x.Name,false,  Model.ReleaseReport.CustomerId, "CustomerId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Товар</label>
+				@Html.EnumerableDropDown(Model.Products, x => x.ProductId, x => x.Name,false,  Model.ReleaseReport.ProductId, "productId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Склад</label>
+				@Html.EnumerableDropDown(Model.Storages, x => x.StorageId, x => x.Name,false,  Model.ReleaseReport.StorageId, "storageId")
+			</div>
+
+			<!--Объём-->
+			<div class="form-group">
+				<label class="col-form-label">Объём</label>
+				<input value="@Model.ReleaseReport.Volume" type="number" name="Volume" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Стоимость</label>
+				<input value="@Model.ReleaseReport.Cost" type="number" step="any" name="Cost" class="form-control" />
+			</div>
+
+			<div class="form-group">
+				<input type="submit" class="form-control" style="margin-top:20px" />
+			</div>
+		</form>
+	</div>
+</div>

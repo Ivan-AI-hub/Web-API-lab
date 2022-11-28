@@ -1,0 +1,61 @@
+﻿@using Whosales.Domain
+@model Storage
+@{
+    Layout = "_Layout";
+}
+
+@if (Model != null)
+{
+	<h4>
+		Сведение о складе @Model.Name
+		@if (this.User.IsInRole("admin"))
+		{
+			@Html.ActionLink("Обновить информацию", "Update", "Storage", new {id = Model.StorageId}, new {@class="btn btn-sm btn-primary"})
+		}
+	</h4>
+	<div>Название склада : @Model.Name</div>
+	<div>Количество получено на склад : @Model.ReceiptReports.Sum(x => x.Volume)</div>
+	<div>Количество реализовано со склада : @Model.ReleaseReports.Sum(x => x.Volume)</div>
+	<div>
+		<table class="table">
+			<tr>
+				<td>Продукция</td>
+				<td>Количество получено на склад</td>
+				<td>Количество реализовано со склада</td>
+				<td>Остаток</td>
+			</tr>
+			@foreach (var report in
+					from e in Model.ReceiptReports
+					join d in Model.ReleaseReports
+					on e.ProductId equals d.ProductId into empDept
+					from ed in empDept.DefaultIfEmpty()
+					orderby e.Product.Name
+					select new
+					{
+						productid = e.ProductId,
+						productName = e.Product.Name,
+						receiptVolume = e.Volume,
+						releaseVolume = ed == null ? 0 : ed.Volume,
+						remains = e.Volume - (ed == null ? 0 : ed.Volume)
+					}
+					)
+			{
+				<tr>
+					<td>@report.productName</td>
+					<td>@report.receiptVolume</td>
+					<td>@report.releaseVolume</td>
+					<td>@report.remains</td>
+					@if (this.User.IsInRole("admin"))
+					{
+						<td>@Html.ActionLink("Добавить получение", "Add", "ReceiptReport", new{selectedProductId = report.productid, selectedStorageId = Model.StorageId}, new {@class="btn btn-sm btn-primary"})</td>
+						<td>@Html.ActionLink("Добавить реализацию", "Add", "ReleaseReport", new{selectedProductId = report.productid, selectedStorageId = Model.StorageId}, new {@class="btn btn-sm btn-primary"})</td>
+					}
+				</tr>
+			}
+		</table>
+	</div>
+}
+else
+{
+	<h4>Склад не был обноружен</h4>
+}

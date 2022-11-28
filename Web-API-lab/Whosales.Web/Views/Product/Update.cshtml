@@ -1,0 +1,43 @@
+﻿@using Whosales.Domain
+@using Whosales.Web.Extentions;
+@using Whosales.Web.HtmlHelpers;
+@using Whosales.Web.Models;
+@using Whosales.Web.Models.Products;
+@{
+	Layout = "ProductLayout";
+}
+@model ProductUpdatePageViewModel
+
+<div class="col-md-6 align-self-center container">
+	<div class="align-self-center">
+		<form method="post">
+			<div class="form-group">
+				<label class="form-label">Название товара</label>
+				<input type="text" value="@Model.Product.Name" name="Name" class="form-control bg-black bg-opacity-25 " required />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Условия хранения</label>
+				<input type="text" value="@Model.Product.StorageConditions" name="StorageConditions" class="form-control bg-black bg-opacity-25 " required />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Упаковка</label>
+				<input type="text" value="@Model.Product.Package" name="Package" class="form-control bg-black bg-opacity-25 " required />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Срок годности</label>
+				<input type="datetime-local" value="@Model.Product.StorageLife.ToDatePickerView()" name="StorageLife" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Производитель</label>
+				@Html.EnumerableDropDown(Model.Manufacturers, x => x.ManufacturerId, x => x.Name, false, Model.Product.ManufacturerId, "manufacturerId")
+			</div>
+			<div class="form-group">
+				<label class="col-form-label">Тип продукции</label>
+				@Html.EnumerableDropDown(Model.Types, x => x.ProductTypeId, x => x.Name,false,  Model.Product.TypeId, "typeId")
+			</div>
+			<div class="form-group">
+				<input type="submit" class="form-control" style="margin-top:20px" />
+			</div>
+		</form>
+	</div>
+</div>

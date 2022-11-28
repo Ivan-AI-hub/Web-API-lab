@@ -1,0 +1,50 @@
+﻿@using Whosales.Web.Models.ProductTypes;
+@using Whosales.Domain
+@using Whosales.Web.HtmlHelpers
+@using Whosales.Web.Models;
+
+@model ProductTypesPageViewModel
+@{
+	Layout = "ProductTypeLayout";
+}
+
+@Html.CreatePageNav("ProductType", @Model.PageCount, @Model.CurrentPage)
+<div align="center">
+	<form>
+		<span>
+			<label>Название</label>
+			<input type="text" name="nameTemplate" value="@Model.nameTemplate" class="form" />
+		</span>
+		<span>
+			<input type="submit" value="🔍" />
+		</span>
+	</form>
+</div>
+
+<table class="table">
+	<tr>
+		<th>@Html.ActionLink("Название", "GetAll", "ProductType", new{currentPage = @Model.CurrentPage, sortRule = "Name"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Описание", "GetAll", "ProductType", new{currentPage = @Model.CurrentPage, sortRule = "Description"}, new {@class="btn"})</th>
+		<th>@Html.ActionLink("Особенности", "GetAll", "ProductType", new{currentPage = @Model.CurrentPage, sortRule = "Feature"}, new {@class="btn"})</th>
+		<th></th>
+		<th></th>
+	</tr>
+	@foreach (var ProductType in Model.ProductTypes)
+	{
+		<tr>
+			<td>@ProductType.Name</td>
+			<td>@ProductType.Description</td>
+			<td>@ProductType.Feature</td>
+			<td>@Html.ActionLink("Подробнее", "GetById", "ProductType", new {id = @ProductType.ProductTypeId}, new {@class="btn btn-sm btn-primary"})</td>
+			@if (this.User.IsInRole("admin"))
+			{
+				<td>
+					@Html.ActionLink("Обновить", "Update", "ProductType", new {id = @ProductType.ProductTypeId}, new {@class="btn btn-sm btn-primary"})
+					@Html.ActionLink("Удалить", "Delete", "ProductType", new {id = @ProductType.ProductTypeId}, new {@class="btn btn-sm btn-danger"})
+				</td>
+			}
+		</tr>
+	}
+</table>
+<!--Разделение по страницам-->
+@Html.CreatePageNav("ProductType", @Model.PageCount, @Model.CurrentPage)
