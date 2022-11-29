@@ -200,11 +200,13 @@
             tr.append(volumeTd);
 
             const customerTd = document.createElement("td");
-            customerTd.append(releaseReport.customerId);
+            const customerList = userForm.customerDD;
+            customerTd.append(customerList.options[releaseReport.customerId -1].text);
             tr.append(customerTd);
 
             const productTd = document.createElement("td");
-            productTd.append(releaseReport.productId);
+            const productList = userForm.productDD;
+            productTd.append(productList.options[releaseReport.productId -1].text);
             tr.append(productTd);
 
             const linksTd = document.createElement("td");
