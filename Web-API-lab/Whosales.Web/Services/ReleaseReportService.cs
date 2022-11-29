@@ -46,13 +46,9 @@ namespace Whosales.Web.Services
 		public async override Task<IEnumerable<ReleaseReport>> GetAll()
 		{
 			IEnumerable<ReleaseReport> items;
-			string cashKey = "Items";
-			if (!Cache.TryGetValue(cashKey, out items))
-			{
-				items = await Mediator.Send(new GetReleaseReportsQuery());
-				items = items.ToList();
-				Cache.Set(cashKey, items, TimeSpan.FromSeconds(CacheTime));
-			}
+
+			items = await Mediator.Send(new GetReleaseReportsQuery());
+			items = items.ToList();
 			return items;
 		}
 

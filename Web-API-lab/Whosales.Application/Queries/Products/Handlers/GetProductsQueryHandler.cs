@@ -14,8 +14,6 @@ namespace Whosales.Application.Queries.Products.Handlers
 		public override Task<IQueryable<Product>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(_context.Products
-				.Include(x => x.Manufacturer)
-				.Include(x => x.Type)
 				.AsQueryable());
 		}
 	}

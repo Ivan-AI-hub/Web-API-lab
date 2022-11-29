@@ -46,6 +46,8 @@ namespace Whosales.Web
 
 			}
 			app.UseHttpsRedirection();
+			app.UseDefaultFiles();
+			app.UseStaticFiles();
 
 			app.UseRouting();
 

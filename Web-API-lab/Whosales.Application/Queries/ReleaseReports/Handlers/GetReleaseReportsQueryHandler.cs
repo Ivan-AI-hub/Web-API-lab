@@ -15,10 +15,6 @@ namespace Whosales.Application.Queries.ReleaseReports.Handlers
 		public override Task<IQueryable<ReleaseReport>> Handle(GetReleaseReportsQuery request, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(_context.ReleaseReports
-				.Include(x => x.Product)
-				.Include(x => x.Storage)
-				.Include(x => x.Customer)
-				.Include(x => x.Employer)
 				.AsQueryable());
 		}
 	}

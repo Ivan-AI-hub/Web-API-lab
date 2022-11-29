@@ -13,9 +13,9 @@ namespace Whosales.Web.Controllers
 
 		#region Create
 		[HttpPost]
-		public IActionResult Post(ReleaseReport ReleaseReport)
+		public IActionResult Post([FromBody] ReleaseReport ReleaseReport)
 		{
-			if (ReleaseReport == null)
+			if (ReleaseReport == null || ReleaseReport.Cost == 0)
 				return BadRequest();
 			Service.Add(ReleaseReport);
 			return Ok(ReleaseReport);
@@ -24,17 +24,17 @@ namespace Whosales.Web.Controllers
 
 		#region Update
 		[HttpPut]
-		public ActionResult Put(int id, ReleaseReport ReleaseReport)
+		public ActionResult Put([FromBody] ReleaseReport ReleaseReport)
 		{
 			if (ReleaseReport == null)
 				return BadRequest();
-			Service.Update(id, ReleaseReport);
+			Service.Update(ReleaseReport.ReleaseReportId, ReleaseReport);
 			return Ok(ReleaseReport);
 		}
 		#endregion
 
 		#region Delete
-		[HttpDelete]
+		[HttpDelete("{id}")]
 		public ActionResult Delete(int id)
 		{
 			Service.Delete(id);

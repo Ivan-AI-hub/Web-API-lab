@@ -4,7 +4,7 @@ using Whosales.Web.Services;
 
 namespace Whosales.Web.Controllers
 {
-	[Route("/api/Customers")]
+	[Route("/api/customers")]
 	public class CustomerController : BaseController<CustomerService, Customer>
 	{
 		private static string _previousUrl = "";

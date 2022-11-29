@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Список отчетов о продаже</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Список отчетов о продаже</h2>
+    <form name="userForm">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group col-md-5">
+            <label for="cost">Цена:</label>
+            <input class="form-control" name="cost" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="volume">Количество:</label>
+            <input class="form-control" name="volume" type="number" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="customerDD">Заказчик:</label>
+            <select name="customerDD" id="customerDD"></select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="productDD">Товар:</label>
+            <select name="productDD" id="productDD"></select>
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" class="btn btn-primary">Сохранить</button>
+            <a  id="reset" class="btn btn-primary">Сбросить</a>
+        </div>
+    </form>
+    <table class="table table-condensed table-striped  col-md-6">
+        <thead><tr><th>Id</th><th>Стоимость</th><th>Количество</th><th>Заказчик</th><th>Товар</th><th></th></tr></thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div>2019 © Metanit.com</div>
+    <script>
+        async function CreateProductsList() {
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/api/Products", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                // получаем данные
+                const products = await response.json();
+                const selectList = userForm.productDD;
+
+                products.forEach(product => {
+                    var option = document.createElement("option");
+                    option.value = product.productId;
+                    option.text = product.name;
+                    selectList.appendChild(option);
+                });
+            }
+        }
+        async function CreateCustomersList() {
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/api/customers", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                // получаем данные
+                const customers = await response.json();
+                const selectList = userForm.customerDD;
+
+                customers.forEach(customer => {
+                    var option = document.createElement("option");
+                    option.value = customer.customerId;
+                    option.text = customer.name;
+                    selectList.appendChild(option);
+                });
+            }
+        }
+        // Получение всех пользователей
+        async function GetReleaseReports() {
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/api/ReleaseReports", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                // получаем данные
+                const releaseReports = await response.json();
+                let rows = document.querySelector("tbody");
+                releaseReports.forEach(user => {
+                    const rowVal = row(user)
+                    // добавляем полученные элементы в таблицу
+                    rows.append(rowVal);
+                });
+            }
+        }
+        // Получение одного пользователя
+        async function GetReleaseReport(id) {
+            const response = await fetch("/api/ReleaseReports/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const report = await response.json();
+                const form = document.forms["userForm"];
+                form.elements["id"].value = report.releaseReportId;
+                form.elements["cost"].value = report.cost;
+                form.elements["volume"].value = report.volume;
+                form.elements["customerDD"].value = report.customerId;
+                form.elements["productDD"].value = report.productId;
+            }
+        }
+        // Добавление пользователя
+        async function CreateReport(reportCost, reportVolume, reportCustomerId, reportProductId) {
+            console.log(reportCost)
+            console.log(reportVolume)
+            console.log(reportCustomerId)
+            console.log(reportProductId)
+            const response = await fetch("/api/ReleaseReports", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    reciveDate: new Date("2017-01-26"),
+                    orderDate: new Date("2019-01-26"),
+                    releaseDate: new Date("2020-01-26"),
+                    volume: parseInt(reportVolume,10),
+                    Cost: parseInt(reportCost, 10),
+                    customerId: parseInt(reportCustomerId, 10),
+                    employerId: 40,
+                    storageId: 40,
+                    productId: parseInt(reportProductId, 10)
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+                document.querySelector("tbody").append(row(user));
+            }
+        }
+        // Изменение пользователя
+        async function EditReport(reportId, reportCost, reportVolume, reportCustomerId, reportProductId) {
+            const response = await fetch("/api/ReleaseReports/", {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ReleaseReportId: parseInt(reportId, 10),
+                    reciveDate: new Date("2017-01-26"),
+                    orderDate: new Date("2019-01-26"),
+                    releaseDate: new Date("2020-01-26"),
+                    volume: parseInt(reportVolume, 10),
+                    Cost: parseInt(reportCost, 10),
+                    customerId: parseInt(reportCustomerId, 10),
+                    employerId: 40,
+                    storageId: 40,
+                    productId: parseInt(reportProductId, 10)
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+                document.querySelector("tr[data-rowid='" + user.releaseReportId + "']").replaceWith(row(user));
+            }
+        }
+        // Удаление пользователя
+        async function DeleteReport(id) {
+            const response = await fetch("/api/ReleaseReports/" + id, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                document.querySelector("tr[data-rowid='" + id + "']").remove();
+            }
+        }
+
+        // сброс формы
+        function reset() {
+            const form = document.forms["userForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+        // создание строки для таблицы
+        function row(releaseReport) {
+
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", releaseReport.releaseReportId);
+
+            const idTd = document.createElement("td");
+            idTd.append(releaseReport.releaseReportId);
+            tr.append(idTd);
+
+            const costTd = document.createElement("td");
+            costTd.append(releaseReport.cost);
+            tr.append(costTd);
+
+            const volumeTd = document.createElement("td");
+            volumeTd.append(releaseReport.volume);
+            tr.append(volumeTd);
+
+            const customerTd = document.createElement("td");
+            customerTd.append(releaseReport.customerId);
+            tr.append(customerTd);
+
+            const productTd = document.createElement("td");
+            productTd.append(releaseReport.productId);
+            tr.append(productTd);
+
+            const linksTd = document.createElement("td");
+
+            const editLink = document.createElement("a");
+            editLink.setAttribute("data-id", releaseReport.releaseReportId);
+            editLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            editLink.append("Изменить");
+            editLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                GetReleaseReport(releaseReport.releaseReportId);
+            });
+            linksTd.append(editLink);
+
+            const removeLink = document.createElement("a");
+            removeLink.setAttribute("data-id", releaseReport.releaseReportId);
+            removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            removeLink.append("Удалить");
+            removeLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                DeleteReport(releaseReport.releaseReportId);
+            });
+
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+
+            return tr;
+        }
+        // сброс значений формы
+        document.getElementById("reset").click(function (e) {
+
+            e.preventDefault();
+            reset();
+        })
+
+        // отправка формы
+        document.forms["userForm"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["userForm"];
+            const id = form.elements["id"].value;
+            const cost = form.elements["cost"].value;
+            const volume = form.elements["volume"].value;
+            const customerId = form.elements["customerDD"].value;
+            const productId = form.elements["productDD"].value;
+            if (id == 0)
+                CreateReport(cost, volume, customerId, productId);
+            else
+                EditReport(id, cost, volume, customerId, productId);
+        });
+        async function Start() {
+            await CreateCustomersList();
+            await CreateProductsList();
+            await GetReleaseReports();
+        }
+        Start()
+
+
+    </script>
+</body>
+</html>
